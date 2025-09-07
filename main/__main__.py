@@ -21,7 +21,7 @@ load_routers(dp)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    polling_task = asyncio.create_task(dp.start_polling(bot)) # type: ignore
+    polling_task = asyncio.create_task(dp.start_polling(bot))  # type: ignore
 
     try:
         yield
@@ -41,7 +41,7 @@ origins = [
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_credentials=True,  # add this
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -56,10 +56,5 @@ async def root():
     return {"message": "Aki-Forwarder Backend"}
 
 
-
 if __name__ == "__main__":
-    uvicorn.run(
-        app,
-        host=Config.HOST,
-        port=Config.PORT
-    )
+    uvicorn.run(app, host=Config.HOST, port=Config.PORT)

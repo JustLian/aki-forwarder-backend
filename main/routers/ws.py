@@ -14,22 +14,17 @@ async def websocket_connect(ws: WebSocket) -> None:
 
     sess_id = str(uuid.uuid4())
     active_sessions[sess_id] = ws
-    await ws.send_json({
-        "sessionId": sess_id
-    })
+    await ws.send_json({"sessionId": sess_id})
 
     try:
 
         while True:
-            data = await ws.receive_json()
-            print(f"Message from {sess_id}: {data}")
+            await ws.receive_json()
+            # might be used later?
 
     except Exception:
         del active_sessions[sess_id]
 
         if sess_id in session_to_uid:
-            await bot.send_message(
-                session_to_uid[sess_id],
-                "🛑 Session closed"
-            )
+            await bot.send_message(session_to_uid[sess_id], "🛑 Session closed")
             del session_to_uid[sess_id]

@@ -15,13 +15,14 @@ async def upload_file(
     sessionId: str = Form(...),
     file: UploadFile = File(...),
 ) -> Response:
-    
+
     user_id: int | None = session_to_uid.get(sessionId)
 
     if not user_id:
-        raise HTTPException(status_code=400, detail="No telegram user is linked to this session")
-    
-    
+        raise HTTPException(
+            status_code=400, detail="No telegram user is linked to this session"
+        )
+
     data = await file.read()
 
     if len(data) > 8 * 1024 * 1024:
@@ -38,11 +39,8 @@ async def upload_file(
             document=input_file,
             caption=file.filename or None,
         )
-    
+
     except Exception as e:
-        raise HTTPException(
-            status_code=502,
-            detail=f"Failed to send file: {e}"
-        )
+        raise HTTPException(status_code=502, detail=f"Failed to send file: {e}")
 
     return JSONResponse({"message": "File sent successfully"})
